@@ -1,4 +1,4 @@
-import keys from "./secret-config"
+import keys from "../secret-config"
 import axios from "axios";
 // import {fileFromPath} from 'formdata-node/file-from-path'
 // import {fs} from 'formdata-node/fs'; 

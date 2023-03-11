@@ -1,4 +1,4 @@
-import compose from 'compose-middleware'
+import { compose } from 'compose-middleware'
 import multer from 'multer'
 import { Request, Response } from "express"
 import * as whisper from "../services/whisper_api"
@@ -6,7 +6,7 @@ import * as whisper from "../services/whisper_api"
 
 const upload = multer({ dest: 'uploads/' });
 
-export const getWhisperTranscription = compose.compose([
+export const getWhisperTranscription = compose([
     upload.single('test'),
     async (req: Request, res: Response) => {
         const path = req.file.path

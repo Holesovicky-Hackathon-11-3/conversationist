@@ -21,7 +21,7 @@
 
 // // Path: app/src/index.ts
 
-// import ChatGPT from './gpt_api';
+// import ChatGPT from './gpt_api'; 
 
 import { Configuration, OpenAIApi } from "openai";
 import config from "./secret-config"
@@ -32,7 +32,7 @@ async function foo() {
         apiKey: config.OPENAPI_KEY,
     });
     const openai = new OpenAIApi(configuration);
-    const response = await openai.listEngines();
+    const response = await openai.listModels();
     console.log(response);
 }
 

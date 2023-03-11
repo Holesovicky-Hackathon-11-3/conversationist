@@ -11,7 +11,7 @@ export async function getNextMessage(req: Request, res: Response) {
         res.status(400)
         res.send("Error: " + error.message)
 
-        console.log(error.message)
+        console.log(error)
         return
     }
     res.send(result)
@@ -19,15 +19,21 @@ export async function getNextMessage(req: Request, res: Response) {
 }
 
 export async function getLanguageCheck(req: Request, res: Response) {
-    const messages = req.body.message
-    let result: string
+    const message = req.body.message
+    if (!message) {
+        res.status(400)
+        res.send("Error: no message provided")
+        return
+    }
+
+    let result: gpt.TextCorrection
     try {
-        result = await gpt.GetGPTEdit(messages);
+        result = await gpt.GetGPTEdit(message);
     } catch (error) {
         res.status(400)
         res.send("Error: " + error.message)
 
-        console.log(error.message)
+        console.log(error)
         return
     }
     res.send(result)

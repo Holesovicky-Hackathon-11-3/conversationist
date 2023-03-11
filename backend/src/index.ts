@@ -1,12 +1,16 @@
 import express, { Application, Request, Response } from "express"
 import gpt from "./gpt_api"
 
+// gpt.SetupLogs()
 const app: Application = express()
 const port: number = 3001
-app.get("/", (req: Request, res: Response) => {
- res.send("Hello toto")
- gpt.foo();
+app.get("/", async (req: Request, res: Response) => {
+    let result = await gpt.GetGPTResponse(
+        [new gpt.Message(gpt.Role.System, "Say this is a test!")]
+    );
+    res.send(result)
+    console.log(result)
 })
 app.listen(port, function () {
- console.log(`App is listening on port ${port} !`)
+    console.log(`App is listening on port ${port} !`)
 })

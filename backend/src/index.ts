@@ -5,7 +5,9 @@ import gpt from "./gpt_api"
 const app: Application = express()
 const port: number = 3001
 app.get("/", async (req: Request, res: Response) => {
-    let result = await gpt.GetGPTResponse();
+    let result = await gpt.GetGPTResponse(
+        [new gpt.Message(gpt.Role.System, "Say this is a test!")]
+    );
     res.send(result)
     console.log(result)
 })

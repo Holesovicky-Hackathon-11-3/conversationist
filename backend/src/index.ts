@@ -1,6 +1,7 @@
 import express, { Application, Request, Response } from "express"
 import axios from 'axios'
 import * as gpt from "./gpt_api"
+import * as whisper from './whisper_api'
 import cors from 'cors'
 import multer from 'multer'
 import * as fs from 'fs'
@@ -35,25 +36,14 @@ app.post("/api/gpt", async (req: Request, res: Response) => {
 
 app.post("/api/whisper", upload.single('test'), async (req: Request, res: Response) => {
     const path = req.file.path
-    // TODO: check req.file.mimetype
-    let formData = new FormData()
-    const content = await new Promise<Buffer>((resolve, reject) => fs.readFile(path, (err, data) => {
-        if (err) {
-            reject(err);
-        } else {
-            resolve(data)
-        }
-    }));
-    formData.append('file', new Blob([content], { type: req.file.mimetype }), 'sound.webm')
-    formData.append('model', 'whisper-1')
-    const whisperRes = await axios.post('https://api.openai.com/v1/audio/transcriptions', formData, {
-        headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: "Bearer " + keys.OPENAPI_KEY,
-        }
-    })
-    console.log("Received Whisper transcription: ", whisperRes.data.text)
-    res.send(whisperRes.data.text)
+    if (req.file.mimetype !== 'audio/webm') {
+        res.status(400)
+        res.send("Incorrect sound file format - WEBM expected")
+        return
+    }
+    const transcription = await whisper.GetWhisperTranscription(path)
+    console.log("Received Whisper transcription: ", transcription)
+    res.send({transcription})
 })
 
 

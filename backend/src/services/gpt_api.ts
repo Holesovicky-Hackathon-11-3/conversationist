@@ -50,16 +50,19 @@ async function GetGPTResponse(messages: Message[]): Promise<GPTResponseMessage> 
     }
 }
 
-async function GetGPTEdit(message_content: string) {
+async function GetGPTEdit(message_content: string): Promise<string> {
+    message_content = message_content.trim().replace("\n", " ").replace("\"", "\'")
     const prompt = 
+        "You are a native English speaker teacher with excellent language skills.\n" +
         "Are there any spelling or grammatical mistakes in the following sentence?\n\n" +
-        message_content + "\n\n" +
+        "\"" + message_content + "\"\n\n" +
         "Answer with YES or NO and then list all the mistakes."
     let response_content = (await GetGPTResponse([
         new Message(Role.User, prompt)
     ])).content
     response_content = response_content.trim()
-
+    // TODO
+    return response_content
 }
 
 function SetupLogs() {
@@ -75,4 +78,4 @@ function SetupLogs() {
 }
 
 // export default { GetGPTResponse, SetupLogs, Message, Role, GPTResponseMessage }
-export { GetGPTResponse, SetupLogs, Message, Role, GPTResponseMessage }
+export { GetGPTResponse, GetGPTEdit, SetupLogs, Message, Role, GPTResponseMessage }

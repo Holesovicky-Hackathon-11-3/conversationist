@@ -49,8 +49,12 @@ export class Recorder extends React.Component<RecorderProps, RecorderState> {
         return (
             <>
             <div id="buttons">
-                <button className="record" onClick={() => this.soundRecorder.start()} disabled={!this.state.recordingAccepted}>Record</button>
-                <button className="stop" onClick={() => this.soundRecorder.stop()} disabled={!this.state.recordingAccepted}>Stop</button>
+                <button className='border rounded-2xl m-2 p-2 hover:bg-sky-100' onClick={() => this.soundRecorder.start()} disabled={!this.state.recordingAccepted}>
+                    Record
+                </button>
+                <button className='border rounded-2xl m-2 p-2 hover:bg-sky-100' onClick={() => this.soundRecorder.stop()} disabled={!this.state.recordingAccepted}>
+                    Stop
+                </button>
             </div>
             <p>{this.state.transcription}</p>
             </>

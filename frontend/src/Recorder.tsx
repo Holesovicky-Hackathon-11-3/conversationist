@@ -56,7 +56,8 @@ export class Recorder extends React.Component<RecorderProps, RecorderState> {
                     Stop
                 </button>
             </div>
-            <p>{this.state.transcription}</p>
+            {/* 
+            <p>{this.state.transcription}</p> */}
             </>
         );
     }

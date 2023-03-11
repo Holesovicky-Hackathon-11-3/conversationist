@@ -4,6 +4,12 @@ import { useSearchParams } from 'react-router-dom';
 import demo_data from './DEMO_data/demo_data.json';
 import { GptClient } from './GptClient.service';
 import { Scenario } from './Scenario';
+import { Recorder } from "./Recorder";
+
+
+function assert(expr:any): asserts expr {
+  if (!expr) throw new Error("Assertion failed");
+}
 
 
 export function Story() {
@@ -21,11 +27,15 @@ export function Story() {
       (story) => story.id === parseInt(id || '0'))?.situations.length).fill(false));
 
   let data = demo_data.stories.find(story => story.id === parseInt(id || '0'));
+  assert(data);
 
   let [conversations, setConversations] = React.useState<Conversation[]>(
-    new Array<Conversation>(data?.situations.length ?? 1).fill(
-      { messages: [] }
-    )
+    data.situations.map((scenario) => ({
+      messages: [{
+        role: Role.System,
+        content: scenario.text
+      }]
+    }))
   );
 
   function scenario() {
@@ -44,17 +54,27 @@ export function Story() {
     }
   }
 
-  let currentConversation = conversations[currentScenario];
   async function submitAnswer(answer: string) {
-    currentConversation.messages.push({
+    let newMessages = conversations[currentScenario].messages.concat([{
       role: Role.User,
       content: answer,
+    }]);
+    setConversations({
+      ...conversations, [currentScenario]: {
+        messages: newMessages
+      }
     });
-    setConversations(conversations);
 
-    const reply = await gpt.getAssistantReply(currentConversation);
-    currentConversation.messages.push(reply);
-    setConversations(conversations);
+    const reply = await gpt.getAssistantReply({
+      messages: newMessages
+    });
+    newMessages.push(reply);
+    console.log(reply);
+    setConversations({
+      ...conversations, [currentScenario]: {
+        messages: newMessages
+      }
+    });
   }
 
   return (

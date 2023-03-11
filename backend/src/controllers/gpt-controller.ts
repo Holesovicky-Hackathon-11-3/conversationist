@@ -45,3 +45,25 @@ export async function getLanguageCheck(req: Request, res: Response) {
     res.send(result)
     console.log(result)
 }
+
+export async function generateStory(req: Request, res: Response) {
+    const topic = req.body.topic
+    if (!topic) {
+        res.status(400)
+        res.send("Error: no topic provided")
+        return
+    }
+
+    let result: string
+    try {
+        result = await gpt.GenerateStory(topic);
+    } catch (error) {
+        res.status(400)
+        res.send("Error: " + error.message)
+
+        console.log(error)
+        return
+    }
+    res.send(result)
+    console.log(result)
+}

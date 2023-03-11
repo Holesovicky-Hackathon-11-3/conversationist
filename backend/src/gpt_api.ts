@@ -49,7 +49,7 @@ async function GetGPTResponse() {
     // create HTTP request using axios
     try {
         const response = await axios(config)
-        return response
+        return response.data
     } catch (error) {
         if (error.response) {
             console.log(error.response.status);

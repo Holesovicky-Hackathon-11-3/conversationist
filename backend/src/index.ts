@@ -14,6 +14,8 @@ app.post("/api/gpt", controllers.getNextMessage)
 
 app.post("/api/whisper", controllers.getWhisperTranscription)
 
+app.post("/api/check", controllers.getLanguageCheck)
+
 
 app.listen(port, function () {
     console.log(`App is listening on port ${port} !`)

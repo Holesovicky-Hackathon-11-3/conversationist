@@ -23,3 +23,19 @@ export const getNextMessage = compose([
         console.log(result)
     },
 ])
+
+export async function getLanguageCheck(req: Request, res: Response) {
+    const messages = req.body.message
+    let result: string
+    try {
+        result = await gpt.GetGPTEdit(messages);
+    } catch (error) {
+        res.status(400)
+        res.send("Error: " + error.message)
+
+        console.log(error.message)
+        return
+    }
+    res.send(result)
+    console.log(result)
+}

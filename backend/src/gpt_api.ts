@@ -1,49 +1,35 @@
 import keys from "./secret-config"
 import axios from "axios";
 
-// async function foo() {
-//     const configuration = new Configuration({
-//         organization: "org-10yq50qLRI3ntaeTQqPsIH7pE",
-//         apiKey: config.OPENAPI_KEY,
-//     });
-//     const openai = new OpenAIApi(configuration);
-//     try {
-//         const response = await openai.listModels();
-//         console.log(response);
-//     } catch (error) {
-//         if (error.response) {
-//             console.log(error.response.status);
-//             console.log(error.response.data);
-//         } else {
-//             console.log(error.message);
-//         }
-//     }
-// }
+class Message {
+    role: Role;
+    content: string;
 
-function SetupLogs() {
-    axios.interceptors.request.use(request => {
-        console.log('Starting Request', JSON.stringify(request, null, 2))
-        return request
-    })
-
-    axios.interceptors.response.use(response => {
-        console.log('Response:', JSON.stringify(response, null, 2))
-        return response
-    })
+    constructor(role: Role, content: string) {
+        this.role = role;
+        this.content = content;
+    }
 }
 
-async function GetGPTResponse() {
+enum Role {
+    User = "user",
+    System = "system",
+    Assistant = "assistant"
+}
+
+async function GetGPTResponse(messages: Message[]) {
     let config = {
         url: "https://api.openai.com/v1/chat/completions",
         method: "post",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + keys.OPENAPI_KEY,
+            Authorization: "Bearer " + keys.OPENAPI_KEY,
         },
         data: {
-            "model": "gpt-3.5-turbo",
-            "messages": [{ "role": "user", "content": "Say this is a test!" }],
-            "temperature": 0.7
+            model: "gpt-3.5-turbo",
+            // messages: [{ "role": "user", "content": "Say this is a test!" }],
+            messages,
+            temperature: 0.7
         },
     }
     // create HTTP request using axios
@@ -60,4 +46,16 @@ async function GetGPTResponse() {
     }
 }
 
-export default { GetGPTResponse, SetupLogs }
+function SetupLogs() {
+    axios.interceptors.request.use(request => {
+        console.log('Starting Request', JSON.stringify(request, null, 2))
+        return request
+    })
+
+    axios.interceptors.response.use(response => {
+        console.log('Response:', JSON.stringify(response, null, 2))
+        return response
+    })
+}
+
+export default { GetGPTResponse, SetupLogs, Message, Role }

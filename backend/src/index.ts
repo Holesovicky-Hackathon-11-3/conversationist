@@ -5,7 +5,9 @@ gpt.SetupLogs()
 const app: Application = express()
 const port: number = 3001
 app.get("/", (req: Request, res: Response) => {
-    let result = gpt.GetGPTResponse();
+    let result = gpt.GetGPTResponse(
+        [new gpt.Message(gpt.Role.System, "Say this is a test!")]
+    );
     res.send(result)
     console.log(result)
 })

@@ -1,4 +1,4 @@
-import keys from "./secret-config"
+import keys from "../secret-config"
 import axios from "axios";
 
 class Message {

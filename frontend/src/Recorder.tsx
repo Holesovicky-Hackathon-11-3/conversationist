@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface RecorderState {
-    url: string;
+    transcription: string;
 }
 
 export class Recorder extends React.Component<{}, RecorderState> {
@@ -12,7 +12,7 @@ export class Recorder extends React.Component<{}, RecorderState> {
         super(props);
         this.mediaRecorder = null;
         this.data = null;
-        this.state = {url: ""}
+        this.state = {transcription: ""}
     }
 
     render() {
@@ -22,7 +22,7 @@ export class Recorder extends React.Component<{}, RecorderState> {
                 <button className="record" onClick={() => this.onRecordStart()}>Record</button>
                 <button className="stop" onClick={() => this.onRecordStop()}>Stop</button>
             </div>
-            <a href={this.state.url}>klikni</a>
+            <p>{this.state.transcription}</p>
             </>
         );
     }
@@ -40,18 +40,19 @@ export class Recorder extends React.Component<{}, RecorderState> {
         this.mediaRecorder.ondataavailable = (e) => {
             this.data = e.data;
         }
-        this.mediaRecorder.onstop = (e) => {
+        this.mediaRecorder.onstop = async (e) => {
             if (this.data == null) {
                 return;
             }
             let formData = new FormData()
             formData.append('test', this.data)
-            fetch('http://localhost:3001/api/whisper', {
+            const response = await fetch('http://localhost:3001/api/whisper', {
                 method: 'POST',
                 body: formData,
             })
+            const parsed = await response.json()
             // var blobUrl = URL.createObjectURL(this.data);
-            // this.setState({url: blobUrl})
+            this.setState({transcription: parsed.transcription})
             // console.log(blobUrl);
         }
     }

@@ -1,13 +1,14 @@
 import { Answer } from './Answer';
 import React from 'react';
-
+import { Conversation } from "./api-model";
+import { Recorder } from './Recorder';
 
 
 export interface Scenario {
     text: string;
     image: string;
-    answers: string[];
-    addAnswer: (answer: string) => void;
+    conversation: Conversation;
+    submitAnswer: (answer: string) => void;
 }
 
 const filterEnter = (f: (e: React.KeyboardEvent<HTMLInputElement>) => void) => {
@@ -20,11 +21,13 @@ const filterEnter = (f: (e: React.KeyboardEvent<HTMLInputElement>) => void) => {
 
 
 export function Scenario(scenario: Scenario) {
+
+    let { conversation } = scenario;
     
     let [currentAnswer, setCurrentAnswer] = React.useState("");
 
     function submitAnswer() {
-        scenario.addAnswer(currentAnswer);
+        scenario.submitAnswer(currentAnswer);
         setCurrentAnswer("");
     }
 
@@ -35,13 +38,20 @@ export function Scenario(scenario: Scenario) {
             </div>
             <p className='mt-4 mb-4 mx-4'>{scenario.text}</p>
             {
-                scenario.answers.map(answer => {
-                    return (
-                        <>
-                            <p>{answer}</p>
-                            <Answer />
-                        </>
-                    )
+                conversation.messages.map(msg => {
+                    if (msg.role === 'user') {
+                        return (
+                            <>
+                                <p>{msg.content}</p>
+                            </>
+                        )
+                    } else if (msg.role === 'assistant') {
+                        return (
+                            <>
+                                <Answer text={msg.content} />
+                            </>
+                        )   
+                    }
                 })
             }
             <input
@@ -51,6 +61,7 @@ export function Scenario(scenario: Scenario) {
                 type="text"
                 placeholder="Enter your answer here" className="border rounded-2xl m-2 p-2 hover:bg-sky-100 w-64" />
             <button className='border p-2 rounded-2xl hover:bg-sky-100' onClick={e => submitAnswer()}>Send</button>
+            <Recorder setTranscriptionCallback={() => submitAnswer} />
         </div>
     )
 

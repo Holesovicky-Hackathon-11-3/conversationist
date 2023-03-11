@@ -13,7 +13,7 @@ function App() {
         <Route path="/" element={<MainMenu />} />
         <Route path="/story" element={<Story />} />
         <Route path="*" element={<h1>404: Not Found</h1>} />
-        <Route path="/recorder" element={<Recorder />} />
+        <Route path="/recorder" element={<Recorder setTranscriptionCallback={(text) => {}}/>} />
       </Routes>
     </BrowserRouter>
   );

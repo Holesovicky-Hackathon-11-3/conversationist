@@ -3,6 +3,9 @@ import React from 'react';
 import { Story } from './Story';
 
 export function MainMenu() {
+
+  
+
   return (
     <div className="MainMenu">
       <header className="MainMenu-header">

@@ -16,7 +16,7 @@ app.use(cors())
 const upload = multer({ dest: 'uploads/' });
 // app.use(upload.array());
 
-app.get("/api/gpt", async (req: Request, res: Response) => {
+app.post("/api/gpt", async (req: Request, res: Response) => {
     let result: gpt.GPTResponseMessage
     try {
         result = await gpt.GetGPTResponse(
@@ -44,7 +44,6 @@ app.post("/api/whisper", upload.single('test'), async (req: Request, res: Respon
             resolve(data)
         }
     }));
-    console.log('file type', req.file.mimetype)
     formData.append('file', new Blob([content], { type: req.file.mimetype }), 'sound.webm')
     formData.append('model', 'whisper-1')
     const whisperRes = await axios.post('https://api.openai.com/v1/audio/transcriptions', formData, {
@@ -53,7 +52,8 @@ app.post("/api/whisper", upload.single('test'), async (req: Request, res: Respon
             Authorization: "Bearer " + keys.OPENAPI_KEY,
         }
     })
-    console.log(whisperRes.data)
+    console.log("Received Whisper transcription: ", whisperRes.data.text)
+    res.send(whisperRes.data.text)
 })
 
 

@@ -50,6 +50,18 @@ async function GetGPTResponse(messages: Message[]): Promise<GPTResponseMessage> 
     }
 }
 
+async function GetGPTEdit(message_content: string) {
+    const prompt = 
+        "Are there any spelling or grammatical mistakes in the following sentence?\n\n" +
+        message_content + "\n\n" +
+        "Answer with YES or NO and then list all the mistakes."
+    let response_content = (await GetGPTResponse([
+        new Message(Role.User, prompt)
+    ])).content
+    response_content = response_content.trim()
+
+}
+
 function SetupLogs() {
     axios.interceptors.request.use(request => {
         console.log('Starting Request', JSON.stringify(request, null, 2))

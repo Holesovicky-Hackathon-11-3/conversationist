@@ -1,7 +1,6 @@
 import express, { Application, Request, Response } from "express"
 import * as gpt from "./gpt_api"
 
-// gpt.SetupLogs()
 const app: Application = express()
 const port: number = 3001
 
@@ -37,5 +36,5 @@ app.get("/api/whisper", async (req: Request, res: Response) => {
 
 
 app.listen(port, function () {
-    console.log(`App is listening on port ${port} !`)
+ console.log(`App is listening on port ${port} !`)
 })

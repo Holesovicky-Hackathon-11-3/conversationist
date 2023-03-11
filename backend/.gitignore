@@ -1,3 +1,2 @@
 node_modules
-dist
-src/secret-config.ts
+src/secret-config.js

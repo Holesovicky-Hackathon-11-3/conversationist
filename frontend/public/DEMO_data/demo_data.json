@@ -1,0 +1,46 @@
+{
+    "stories":[
+        {
+            "id":1,
+            "title":"At the beach",
+            "situations":[
+                {
+                    "title":"Arrival",
+                    "text":"You arrive at the beach in a bus. You want to know where you can buy umbrellas. What do you do?",
+                    "image":"demo_images/beach/beach.png"
+                },
+                {
+                    "title":"Buying umbrellas",
+                    "text":"You go up to the shop and ask for a umbrella. The shopkeeper says that he doesn't have any umbrellas. What do you do?",
+                    "image":"demo_images/beach/umbrella.png"
+                },
+                {
+                    "title":"Finding a small child",
+                    "text":"You're walking on the beach and you find a lost child. What should you do if you find a lost child on the beach?",
+                    "image":"demo_images/beach/child.png"
+                }
+            ]
+        },
+        {
+            "id":2,
+            "title":"In the forest",
+            "situations":[
+                {
+                    "title":"Arrival",
+                    "text":"You arrive at the beach in a bus. You want to know where you can buy umbrellas. What do you do?",
+                    "image":"demo_images/beach/beach.png"
+                },
+                {
+                    "title":"Buying soda",
+                    "text":"You go up to the shop and ask for a soda. The shopkeeper says that he doesn't have any soda. What do you do?",
+                    "image":"demo_images/beach/soda.png"
+                },
+                {
+                    "title":"Buying an umbrella",
+                    "text":"You go up to the shop and ask for an umbrella. The shopkeeper says that it costs 10 dollars. What do you do?",
+                    "image":"demo_images/beach/umbrella.png"
+                }
+            ]
+        }
+    ]
+}

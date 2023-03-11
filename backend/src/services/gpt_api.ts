@@ -22,6 +22,11 @@ type GPTResponseMessage = {
     content: string
 }
 
+type TextCorrection = {
+    contains_mistakes: boolean
+    suggestions: string[] | null
+}
+
 
 async function GetGPTResponse(messages: Message[]): Promise<GPTResponseMessage> {
     let config = {
@@ -39,8 +44,9 @@ async function GetGPTResponse(messages: Message[]): Promise<GPTResponseMessage> 
     }
     try {
         const response = await axios(config)
-        const parsed = JSON.parse(response.data)
-        return parsed.choices[0].message as GPTResponseMessage
+        const response_message = response.data.choices[0].message
+        // const parsed = JSON.parse(response.data)
+        return response_message as GPTResponseMessage
     } catch (error) {
         if (error.response) {
             throw new Error("OpenAI API Error (code " + error.response.status + "): " + JSON.stringify(error.response.data))
@@ -50,9 +56,9 @@ async function GetGPTResponse(messages: Message[]): Promise<GPTResponseMessage> 
     }
 }
 
-async function GetGPTEdit(message_content: string): Promise<string> {
+async function GetGPTEdit(message_content: string): Promise<TextCorrection> {
     message_content = message_content.trim().replace("\n", " ").replace("\"", "\'")
-    const prompt = 
+    const prompt =
         "You are a native English speaker teacher with excellent language skills.\n" +
         "Are there any spelling or grammatical mistakes in the following sentence?\n\n" +
         "\"" + message_content + "\"\n\n" +
@@ -60,9 +66,37 @@ async function GetGPTEdit(message_content: string): Promise<string> {
     let response_content = (await GetGPTResponse([
         new Message(Role.User, prompt)
     ])).content
+
     response_content = response_content.trim()
-    // TODO
-    return response_content
+    console.log(response_content)
+    let negative_response = {
+        contains_mistakes: false,
+        suggestions: null
+    } as TextCorrection
+    if (!response_content.startsWith("YES") && !response_content.startsWith("Yes")) {
+        return negative_response;
+    }
+
+    let suggestions: string[] = []
+    for (let line of response_content.split("\n")) {
+        line = line.trim()
+        if (line.length == 0) {
+            continue
+        }
+        const firstChar = line[0]
+        if (firstChar == "-" || (firstChar >= "0" && firstChar <= "9")) {
+            suggestions.push(line.substring(2).trim())
+        }
+    }
+
+    if (suggestions.length == 0) {
+        return negative_response
+    }
+
+    return {
+        contains_mistakes: true,
+        suggestions: suggestions
+    }
 }
 
 function SetupLogs() {
@@ -78,4 +112,4 @@ function SetupLogs() {
 }
 
 // export default { GetGPTResponse, SetupLogs, Message, Role, GPTResponseMessage }
-export { GetGPTResponse, GetGPTEdit, SetupLogs, Message, Role, GPTResponseMessage }
+export { GetGPTResponse, GetGPTEdit, SetupLogs, Message, TextCorrection, Role, GPTResponseMessage }

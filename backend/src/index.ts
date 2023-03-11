@@ -44,7 +44,8 @@ app.post("/api/whisper", upload.single('test'), async (req: Request, res: Respon
             resolve(data)
         }
     }));
-    formData.append('file', new Blob([content], { type: req.file.mimetype }))
+    console.log('file type', req.file.mimetype)
+    formData.append('file', new Blob([content], { type: req.file.mimetype }), 'sound.webm')
     formData.append('model', 'whisper-1')
     const whisperRes = await axios.post('https://api.openai.com/v1/audio/transcriptions', formData, {
         headers: {

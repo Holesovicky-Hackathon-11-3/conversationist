@@ -20,8 +20,22 @@ import axios from "axios";
 //     }
 // }
 
+function SetupLogs() {
+    axios.interceptors.request.use(request => {
+        console.log('Starting Request', JSON.stringify(request, null, 2))
+        return request
+    })
+
+    axios.interceptors.response.use(response => {
+        console.log('Response:', JSON.stringify(response, null, 2))
+        return response
+    })
+}
+
 async function GetGPTResponse() {
     let config = {
+        url: "https://api.openai.com/v1/chat/completions",
+        method: "post",
         headers: {
             "Content-Type": "application/json",
             "Authorization": "Bearer " + keys.OPENAPI_KEY,
@@ -30,11 +44,11 @@ async function GetGPTResponse() {
             "model": "gpt-3.5-turbo",
             "messages": [{ "role": "user", "content": "Say this is a test!" }],
             "temperature": 0.7
-        }
+        },
     }
     // create HTTP request using axios
     try {
-        const response = await axios.post("https://api.openai.com/v1/chat/completions", config)
+        const response = await axios(config)
         return response
     } catch (error) {
         if (error.response) {
@@ -46,4 +60,4 @@ async function GetGPTResponse() {
     }
 }
 
-export default { GetGPTResponse }
+export default { GetGPTResponse, SetupLogs }

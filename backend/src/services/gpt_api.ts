@@ -99,6 +99,18 @@ async function GetGPTEdit(message_content: string): Promise<TextCorrection> {
     }
 }
 
+async function GenerateStory(topic: string): Promise<string> {
+    topic = topic.trim().replace("\n", " ")
+    const prompt =
+        "You are an A2 level English speaker. That means you are able to communicate in everyday " +
+        "situations with commonly-used expressions and elementary vocabulary. Now please tell me a " +
+        "story about " + topic + " in simple English. Don't preface it with anything, just start.\n"
+    let response_content = (await GetGPTResponse([
+        new Message(Role.User, prompt)
+    ])).content
+    return response_content;
+}
+
 function SetupLogs() {
     axios.interceptors.request.use(request => {
         console.log('Starting Request', JSON.stringify(request, null, 2))
@@ -112,4 +124,4 @@ function SetupLogs() {
 }
 
 // export default { GetGPTResponse, SetupLogs, Message, Role, GPTResponseMessage }
-export { GetGPTResponse, GetGPTEdit, SetupLogs, Message, TextCorrection, Role, GPTResponseMessage }
+export { GetGPTResponse, GetGPTEdit, GenerateStory, SetupLogs, Message, TextCorrection, Role, GPTResponseMessage }

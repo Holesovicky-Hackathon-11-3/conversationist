@@ -26,7 +26,7 @@ export function Scenario(scenario: Scenario) {
     
     let [currentAnswer, setCurrentAnswer] = React.useState("");
 
-    function submitAnswer() {
+    function submitAnswer(answer: string) {
         scenario.submitAnswer(currentAnswer);
         setCurrentAnswer("");
     }
@@ -55,13 +55,13 @@ export function Scenario(scenario: Scenario) {
                 })
             }
             <input
-                onKeyDown={filterEnter(e => submitAnswer())}
+                onKeyDown={filterEnter(e => submitAnswer(currentAnswer))}
                 onChange={e => setCurrentAnswer(e.target.value)}
                 value={currentAnswer}
                 type="text"
                 placeholder="Enter your answer here" className="border rounded-2xl m-2 p-2 hover:bg-sky-100 w-64" />
-            <button className='border p-2 rounded-2xl hover:bg-sky-100' onClick={e => submitAnswer()}>Send</button>
-            <Recorder setTranscriptionCallback={() => submitAnswer} />
+            <button className='border p-2 rounded-2xl hover:bg-sky-100' onClick={e => submitAnswer(currentAnswer)}>Send</button>
+            <Recorder setTranscriptionCallback={(text) => setCurrentAnswer(text)} />
         </div>
     )
 
